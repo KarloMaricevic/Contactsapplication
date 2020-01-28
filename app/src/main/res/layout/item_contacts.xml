@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="contact"
+            type="my.app.contactsapplication.domain.Contact" />
+
+
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="50dp"
+        android:layout_width="match_parent">
+
+        <ImageView
+            android:id="@+id/thumbnailImageView"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_person_not_filled"
+            android:scaleType="fitXY"
+            android:contentDescription="@string/contact_thumbnail_content_description"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            >
+        </ImageView>
+
+
+        <TextView
+            android:id="@+id/text_view_contact_name"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@{contact.mName}"
+            android:gravity="center_vertical"
+            app:layout_constraintStart_toEndOf="@id/thumbnailImageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:text="item"
+            >
+        </TextView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
