@@ -11,13 +11,10 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.reactivex.Observable
 import my.app.contactsapplication.BaseApplication
-import my.app.contactsapplication.R
 import my.app.contactsapplication.adapter.ContactsAdapter
 import my.app.contactsapplication.core.MviIntent
 import my.app.contactsapplication.core.MviView
 import my.app.contactsapplication.databinding.FragmentContactsRecyclerBinding
-import my.app.contactsapplication.di.AllContactModelStoreSubcomponent.FavoritesContactsSubcomponent.FavoritesContactsViewModelModule
-import my.app.contactsapplication.viewmodels.AllContactsViewModel
 import my.app.contactsapplication.viewmodels.FavoritesContactViewModel
 import my.app.contactsapplication.viewmodels.ViewModelProviderFactory
 import javax.inject.Inject
@@ -30,7 +27,7 @@ class FavoritesContactsFragment : Fragment(),FavoritesContactView {
     @Inject
     lateinit var mViewModelProviderFactory: ViewModelProviderFactory
 
-    private lateinit var mBinindg : FragmentContactsRecyclerBinding
+    private lateinit var mBinding : FragmentContactsRecyclerBinding
 
     private  lateinit var mViewModelStore : FavoritesContactViewModel
 
@@ -54,10 +51,10 @@ class FavoritesContactsFragment : Fragment(),FavoritesContactView {
         // Inflate the layout for this fragment
         mViewModelStore = ViewModelProvider(parentFragment as ViewModelStoreOwner,mViewModelProviderFactory).get(FavoritesContactViewModel::class.java)
         mAdapter = ContactsAdapter(activity!!.applicationContext)
-        mBinindg = FragmentContactsRecyclerBinding.inflate(inflater)
-        mBinindg.recyclerViewContacts.layoutManager = LinearLayoutManager(context)
-        mBinindg.recyclerViewContacts.adapter = mAdapter
-        return mBinindg.root
+        mBinding = FragmentContactsRecyclerBinding.inflate(inflater)
+        mBinding.recyclerViewContacts.layoutManager = LinearLayoutManager(context)
+        mBinding.recyclerViewContacts.adapter = mAdapter
+        return mBinding.root
     }
 
 

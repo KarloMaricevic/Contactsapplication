@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import com.jakewharton.rxbinding3.view.clicks
 import com.jakewharton.rxbinding3.widget.queryTextChanges
@@ -33,10 +34,6 @@ import java.io.InvalidClassException
 import java.lang.IndexOutOfBoundsException
 import javax.inject.Inject
 
-/**
- * A simple [Fragment] subclass.
- */
-
 const val REED_CONTACT_PERMISSION_CODE = 14
 
 class ContactListFragment : Fragment() ,ContactListView, SearchView.OnQueryTextListener {
@@ -53,6 +50,8 @@ class ContactListFragment : Fragment() ,ContactListView, SearchView.OnQueryTextL
     private val mIntentPusher = PublishRelay.create<ContactListMviIntent>()
 
     private val mDisposables = CompositeDisposable()
+
+    private  var mSnackbar: Snackbar? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +81,8 @@ class ContactListFragment : Fragment() ,ContactListView, SearchView.OnQueryTextL
     override fun onResume() {
         super.onResume()
         mViewModelStore.bind(this as MviView<MviIntent, ContactListViewState>)
+        mIntentPusher.accept(ContactListMviIntent.RequestReedPermission)
+
 
         (mBinding.toolbar.menu.findItem(R.id.action_search).actionView as SearchView).setOnQueryTextListener(this)
         mDisposables.add(mBinding.fabAddContact.clicks()
@@ -140,12 +141,39 @@ class ContactListFragment : Fragment() ,ContactListView, SearchView.OnQueryTextL
 
     override fun render(state: ContactListViewState) {
         when {
-            state.requestReedPermission -> { requestPermission() }
-            state.errorLoadingContacts -> {  }
-            state.errorFilteringContacts -> {  }
-            else -> {  }
+            state.requestReedPermission -> {
+                requestPermission()
+            }
+            state.errorLoadingContacts -> {
+                initLoadingErrorSnackbar()
+            }
+            state.errorFilteringContacts -> {
+                initFilteringErrorSnackbar(state)
+            }
+            else -> {
+                mSnackbar?.dismiss()
+                mSnackbar = null
+            }
         }
     }
+
+    private fun initLoadingErrorSnackbar(){
+        mSnackbar = Snackbar
+            .make(mBinding.root,R.string.snackbar_text_loading_contact_error ,Snackbar.LENGTH_INDEFINITE)
+            .setAction(R.string.snackbar_action_text) {mIntentPusher.accept(ContactListMviIntent.InitializeContacts)}
+        mSnackbar?.show()
+    }
+
+    private fun initFilteringErrorSnackbar(state : ContactListViewState){
+        mSnackbar = Snackbar
+            .make(mBinding.root,R.string.snackbar_text_filtering_error ,Snackbar.LENGTH_INDEFINITE)
+            .setAction(R.string.snackbar_action_text) {mIntentPusher.accept(ContactListMviIntent.QueryMviIntent(state.query!!))}
+        mSnackbar?.show()
+
+    }
+
+
+
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         if(query != null )

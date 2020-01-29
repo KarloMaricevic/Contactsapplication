@@ -7,20 +7,18 @@ import my.app.contactsapplication.core.MviIntent
 import my.app.contactsapplication.repository.ContactRepository
 import my.app.contactsapplication.ui.ContactsListFragment.ContactListMviIntent
 import my.app.contactsapplication.ui.ContactsListFragment.ContactListViewState
-import java.lang.Exception
 
-class GetContactMiddleware(val contactRepository: ContactRepository) : Middleware<MviIntent,ContactListViewState> {
+class GetContactMiddleware(private val mContactRepository: ContactRepository) : Middleware<MviIntent,ContactListViewState> {
 
     override fun bind(intents: Observable<MviIntent>, state : Observable<ContactListViewState>) : Observable<MviIntent>
     {
         return intents.ofType<ContactListMviIntent.InitializeContacts>()
             .flatMap<MviIntent> {
-                contactRepository
-                    .getAllContacts()
-                    .toObservable()
-                    .map<SearchInternalMviIntent> { return@map SearchInternalMviIntent.SearchAllContactSuccess(it.get(0),it.get(1)) }
-                    .onErrorReturn { SearchInternalMviIntent.SearchAllContactFailure(Exception("Error loading contacts")) }
-                    .startWith(SearchInternalMviIntent.SearchingAllContacts)
+                return@flatMap mContactRepository
+                    .getAllContacts().toObservable()
+                    .map<MviIntent> { SearchInternalMviIntent.SearchContactSuccess(it[0], it[1])}
+                    .onErrorReturn {SearchInternalMviIntent.SearchContactFailure(Throwable("Error loading contacts"))}
+                    .startWith(SearchInternalMviIntent.SearchingContacts)
             }
     }
 }

@@ -14,36 +14,37 @@ class ContactListSearchReducer @Inject constructor() : Reducer<ContactListViewSt
     override fun reduce(state: ContactListViewState, intent: MviIntent): ContactListViewState {
         return when (intent)
         {
-            is ContactListMviIntent.RequestReedPermission -> ContactListViewState()
-            is SearchInternalMviIntent.SearchingAllContacts ->
+            is ContactListMviIntent.RequestReedPermission ->
                 ContactListViewState().copy(
-                    requestReedPermission = false,
+                    requestReedPermission = true
+                )
+            is SearchInternalMviIntent.SearchingContacts ->
+                ContactListViewState().copy(
                     isLoadingContacts = true
                 )
-            is SearchInternalMviIntent.SearchAllContactSuccess ->
+            is SearchInternalMviIntent.SearchContactSuccess ->
                 ContactListViewState().copy(
-                    requestReedPermission = false,
                     allContactList = intent.allContactList,
                     favoritesContactsList = intent.favoritesContactList
                 )
-            is SearchInternalMviIntent.SearchAllContactFailure ->
+            is SearchInternalMviIntent.SearchContactFailure ->
                 ContactListViewState().copy(
-                    requestReedPermission = false,
                     errorLoadingContacts = true
                 )
             is FilterInternalMviIntent.FilteringContacts ->
                 state.copy(
-                    isFilteringContacts = true
+                    isFilteringContacts = true,
+                    query = intent.query
                 )
             is FilterInternalMviIntent.FilteringSuccessful ->
                 state.copy(
-                    isFilteringContacts = false,
                     filteredAllContactsList = intent.filteredAllContactList,
                     filteredFavoritesContactList = intent.filteredFavoritesContactList
                 )
             is FilterInternalMviIntent.FilteringFailed ->
-                ContactListViewState().copy(
-                    errorFilteringContacts = true
+                state.copy(
+                    errorFilteringContacts = true,
+                    query = intent.query
                 )
             else -> {
                 return state

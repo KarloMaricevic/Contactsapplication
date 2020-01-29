@@ -3,6 +3,7 @@ package my.app.contactsapplication.mvi.store
 import com.jakewharton.rxrelay2.BehaviorRelay
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.withLatestFrom
 import my.app.contactsapplication.core.MviIntent
 import my.app.contactsapplication.di.scope.PerAllContactModelStoreSubcomponent
 import my.app.contactsapplication.mvi.reducer.ContactListSearchReducer
@@ -17,7 +18,14 @@ class ContactListModelStore @Inject constructor(private val reducer : ContactLis
 
     fun process(intents : PublishRelay<MviIntent>) : Disposable{
         disposable = intents
-            .map {
+            .withLatestFrom(state){action , state ->
+                return@withLatestFrom reducer.reduce(state,action)
+            }
+            .distinctUntilChanged()
+            .subscribe({state.accept(it)})
+
+
+           /* .map {
                 return@map reducer.reduce(state.value!!,it)
             }
             .distinctUntilChanged()
@@ -26,7 +34,7 @@ class ContactListModelStore @Inject constructor(private val reducer : ContactLis
             },
                 {
 
-            })
+            })*/
         return disposable
     }
 

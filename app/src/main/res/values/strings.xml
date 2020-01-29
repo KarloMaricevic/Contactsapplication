@@ -3,6 +3,11 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
+    <!--contact_list_fragment-->
+    <string name="snackbar_action_text">Retry</string>
+    <string name="snackbar_text_filtering_error">Error filtering contacts</string>
+    <string name="snackbar_text_loading_contact_error">Error Loading contacts</string>
+
     <!--menu_toolbar-->
     <string name="search_title">Search</string>
 

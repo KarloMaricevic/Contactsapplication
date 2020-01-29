@@ -1,7 +1,6 @@
 package my.app.contactsapplication.mvi.middleware
 
 import my.app.contactsapplication.core.InternalMviIntent
-import my.app.contactsapplication.core.MviIntent
 import my.app.contactsapplication.domain.Contact
 
 sealed class FilterInternalMviIntent : InternalMviIntent {
