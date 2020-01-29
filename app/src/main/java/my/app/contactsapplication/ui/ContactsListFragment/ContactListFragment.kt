@@ -139,15 +139,11 @@ class ContactListFragment : Fragment() ,ContactListView, SearchView.OnQueryTextL
 
 
     override fun render(state: ContactListViewState) {
-        when (state) {
-            is RequestReedPermission -> {
-                requestPermission()
-            }
-            is ErrorLoadingContacts -> {
-            }
-            else -> {
-                InvalidClassException("State render isn't inplemented")
-            }
+        when {
+            state.requestReedPermission -> { requestPermission() }
+            state.errorLoadingContacts -> {  }
+            state.errorFilteringContacts -> {  }
+            else -> {  }
         }
     }
 

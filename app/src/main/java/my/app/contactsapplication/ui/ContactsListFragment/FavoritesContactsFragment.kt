@@ -77,18 +77,22 @@ class FavoritesContactsFragment : Fragment(),FavoritesContactView {
     }
 
     override fun render(state: ContactListViewState) {
-        when(state) {
-            is ContactsLoaded ->{
-
-                if(state.filteredFavoritesContactList != null){
-                    mAdapter.setData(state.filteredFavoritesContactList)
-                }
-                else{
-                    mAdapter.setData(state.favoriteContactList)
-                }
-            }
+        when {
+            state.requestReedPermission -> { }
+            state.errorLoadingContacts -> { emptyRecyclerView() }
+            state.errorFilteringContacts -> { emptyRecyclerView() }
+            state.isLoadingContacts -> { }
+            state.isFilteringContacts -> {}
+            state.filteredFavoritesContactList != null -> mAdapter.setData(state.filteredFavoritesContactList)
+            else -> { mAdapter.setData(state.favoritesContactsList) }
         }
     }
+
+    private fun emptyRecyclerView()
+    {
+        mAdapter.setData(listOf())
+    }
+
 }
 
 

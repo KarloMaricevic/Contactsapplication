@@ -76,17 +76,24 @@ class AllContactsFragment : Fragment(),AllContactView {
     }
 
     override fun render(state: ContactListViewState) {
-        when(state) {
-            is ContactsLoaded ->{
-                if(state.filteredAllContactList != null){
-                    mAdapter.setData(state.filteredAllContactList)
-                }
-                else{
-                    mAdapter.setData(state.allContactList)
-                }
-            }
+        when {
+            state.requestReedPermission -> { }
+            state.errorLoadingContacts -> { emptyRecyclerView() }
+            state.errorFilteringContacts -> { emptyRecyclerView() }
+            state.isLoadingContacts -> { }
+            state.isFilteringContacts -> {}
+            state.filteredAllContactsList != null -> mAdapter.setData(state.filteredAllContactsList)
+            else -> { mAdapter.setData(state.allContactList) }
         }
+
     }
+
+
+    private fun emptyRecyclerView()
+    {
+        mAdapter.setData(listOf())
+    }
+
 
 }
 

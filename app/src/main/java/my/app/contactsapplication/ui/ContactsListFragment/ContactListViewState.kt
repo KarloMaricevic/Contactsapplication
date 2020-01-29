@@ -1,12 +1,17 @@
 package my.app.contactsapplication.ui.ContactsListFragment
 
 import android.drm.DrmStore
+import android.widget.MultiAutoCompleteTextView
 import my.app.contactsapplication.domain.Contact
 
-sealed class ContactListViewState
-    object RequestReedPermission : ContactListViewState()
-    object LoadingContacts : ContactListViewState()
-    data class FilteringContacts(val allContactList: List<Contact>,val favoriteContactList : List<Contact>, val query: String) : ContactListViewState()
-    data class ContactsLoaded (val allContactList : List<Contact>,val favoriteContactList : List<Contact>,val query: String?,val filteredAllContactList : List<Contact>?,val filteredFavoritesContactList : List<Contact>?): ContactListViewState()
-    data class ErrorLoadingContacts (val error : Throwable?) : ContactListViewState()
-    data class ErrorFilteringContacts(val contactList: List<Contact>,val favoriteContactList : List<Contact>,val query: String,val throwable: Throwable) : ContactListViewState()
+data class ContactListViewState(
+    val requestReedPermission: Boolean = true,
+    val isLoadingContacts : Boolean = false,
+    val isFilteringContacts : Boolean = false,
+    val allContactList : List<Contact> = listOf(),
+    val favoritesContactsList : List<Contact> = listOf(),
+    val filteredAllContactsList: List<Contact>? = null,
+    val filteredFavoritesContactList: List<Contact>? = null,
+    val errorLoadingContacts: Boolean  = false,
+    val errorFilteringContacts : Boolean = false
+)

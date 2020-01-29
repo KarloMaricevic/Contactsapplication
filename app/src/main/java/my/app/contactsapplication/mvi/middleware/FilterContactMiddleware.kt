@@ -16,14 +16,22 @@ class FilterContactMiddleware : Middleware<MviIntent,ContactListViewState> {
     ): Observable<MviIntent> {
         return intents
             .ofType<ContactListMviIntent.QueryMviIntent>()
-            .withLatestFrom(state){ intent, state  ->
-                 if(state is ContactsLoaded) {
-                     val filteredAllContactsList = Contact.filterContactList(state.allContactList!!, intent.query)
-                     val filteredFavoritesContactsList = Contact.filterContactList(state.favoriteContactList,intent.query)
-                     return@withLatestFrom FilterInternalMviIntent.FilteringSuccessful(state.allContactList,intent.query,filteredAllContactsList,filteredFavoritesContactsList) as MviIntent
-                 } else(
-                     return@withLatestFrom FilterInternalMviIntent.FilteringFailed(null,intent.query,TypeCastException("state not ContactLoaded"))  )
-                 }
-             }
-
+            .withLatestFrom(state) { intent, state ->
+                if(!intent.query.equals("")) {
+                    val filteredAllContactsList =
+                        Contact.filterContactList(state.allContactList, intent.query)
+                    val filteredFavoritesContactsList =
+                        Contact.filterContactList(state.favoritesContactsList, intent.query)
+                    return@withLatestFrom FilterInternalMviIntent.FilteringSuccessful(
+                        state.allContactList,
+                        intent.query,
+                        filteredAllContactsList,
+                        filteredFavoritesContactsList
+                    )
+                }
+                else{
+                    return@withLatestFrom  FilterInternalMviIntent.FilteringSuccessful(state.allContactList,intent.query,null,null)
+                }
+            }
     }
+}

@@ -7,12 +7,11 @@ import my.app.contactsapplication.core.MviIntent
 import my.app.contactsapplication.di.scope.PerAllContactModelStoreSubcomponent
 import my.app.contactsapplication.mvi.reducer.ContactListSearchReducer
 import my.app.contactsapplication.ui.ContactsListFragment.ContactListViewState
-import my.app.contactsapplication.ui.ContactsListFragment.RequestReedPermission
 import javax.inject.Inject
 
 @PerAllContactModelStoreSubcomponent
 class ContactListModelStore @Inject constructor(private val reducer : ContactListSearchReducer) {
-    private val state = BehaviorRelay.createDefault<ContactListViewState>(RequestReedPermission)
+    private val state = BehaviorRelay.createDefault<ContactListViewState>(ContactListViewState())
     lateinit var disposable: Disposable
 
 
@@ -21,6 +20,7 @@ class ContactListModelStore @Inject constructor(private val reducer : ContactLis
             .map {
                 return@map reducer.reduce(state.value!!,it)
             }
+            .distinctUntilChanged()
             .subscribe({
                 state.accept(it)
             },

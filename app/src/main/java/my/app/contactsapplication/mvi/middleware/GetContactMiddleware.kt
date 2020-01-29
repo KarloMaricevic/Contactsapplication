@@ -7,7 +7,6 @@ import my.app.contactsapplication.core.MviIntent
 import my.app.contactsapplication.repository.ContactRepository
 import my.app.contactsapplication.ui.ContactsListFragment.ContactListMviIntent
 import my.app.contactsapplication.ui.ContactsListFragment.ContactListViewState
-import my.app.contactsapplication.ui.ContactsListFragment.ErrorLoadingContacts
 import java.lang.Exception
 
 class GetContactMiddleware(val contactRepository: ContactRepository) : Middleware<MviIntent,ContactListViewState> {
